@@ -1,8 +1,10 @@
 import { JWT_REFRESH_SECRET, JWT_SECRET } from "../constants/env";
+import { CONFLICT } from "../constants/http";
 import verificationCodeType from "../constants/verificationCodeTypes";
 import SessionModel from "../models/session.model";
 import UserModel from "../models/user.model";
 import VerificationCodeModel from "../models/verificationCode.model";
+import appAssert from "../utils/appAssert";
 import { oneYearFromNow } from "../utils/date";
 import jwt from "jsonwebtoken";
 
@@ -15,9 +17,11 @@ export type CreateAccountParams = {
 export const createAccount = async (data: CreateAccountParams) => {
   //verify existing user doesnt exist
   const existingUser = await UserModel.exists({ email: data.email });
-  if (existingUser) {
-    throw new Error("User already exists");
-  }
+
+  appAssert(!existingUser, CONFLICT, "Email already in use");
+  // if (existingUser) {
+  //   throw new Error("User already exists");
+  // }
 
   //create user
   const user = await UserModel.create({
@@ -58,5 +62,5 @@ export const createAccount = async (data: CreateAccountParams) => {
   );
   //return user & tokens
 
-  return { user, accessToken, refreshToken };
+  return { user: user.omitPassword(), accessToken, refreshToken };
 };

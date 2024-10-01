@@ -30,3 +30,4 @@ export const registerHandler = catchErrors(async (req, res) => {
     .status(CREATED)
     .json(user);
 });
+
