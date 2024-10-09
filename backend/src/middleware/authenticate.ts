@@ -3,7 +3,7 @@ import appAssert from "../utils/appAssert";
 import AppErrorCode from "../constants/appErrorCode";
 import { UNAUTHORIZED } from "../constants/http";
 import { verifyToken } from "../utils/jwt";
-import { ObjectId, Types } from "mongoose";
+import { Types } from "mongoose";
 
 // wrap with catchErrors() if you need this to be async
 const authenticate: RequestHandler = (req, res, next) => {
